@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router';
+import { NavLink } from 'react-router-dom';
 import './App.css';
+import Home from './components/Home';
+import Secrets from './components/Secrets';
 
 function App() {
+  const dispatch = useDispatch()
+  const auth = useSelector(state => state)
+
+  function toggleAuthCallBack() {
+    dispatch({ type: "TOGGLE" })
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavLink to="/" exact>Home</NavLink>
+      { auth ? <NavLink to="/secret" exact>Secret</NavLink> : null }
+      <button onClick={toggleAuthCallBack}>{ auth ? "Logout" : "Login" }</button>
+      <hr />
+      <Route path="/" component={Home} exact />
+      { auth ? <Route path="/secret" component={Secrets} /> : null }
     </div>
   );
 }
